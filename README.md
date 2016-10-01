@@ -1,16 +1,10 @@
 # 图床程序-jsp&servlet
 
-------
-
 ## Describe
 
 这是使用jsp和servlet编写的图床程序，目前0.0.1Beta版本只实现了基本功能，等待完善。
 
-----
-
 ## Change log
-
-
 
 ### V0.0.1(16.10.1)
 
