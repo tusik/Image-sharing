@@ -18,7 +18,8 @@ import javax.servlet.http.Part;
 @MultipartConfig(location = "/usr/local/apache-tomcat-8.5.5/img/img/", maxFileSize = 1024 * 1024 * 10)
 
 public class Upload extends HttpServlet{
-    private static  String dir="/usr/local/apache-tomcat-8.5.5/img/img/";
+    private static final String DIR="/usr/local/apache-tomcat-8.5.5/img/";
+    private static final String UPLOADDIR="img";
     private static final long serialVersionUID = 1L;
 
     public Upload() {
@@ -31,29 +32,30 @@ public class Upload extends HttpServlet{
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        StringBuffer url = request.getRequestURL();
+        String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
         request.setCharacterEncoding("utf-8");
         Part part = request.getPart("filename");
         //获取文件名称
         String filename = getFilename(part);
-        setDir();
-        creatDir(dir);
-        part.write(dir+filename);
+        creatDir(DIR+"/"+UPLOADDIR+"/"+getDir());
+        part.write(DIR+"/"+UPLOADDIR+"/"+getDir()+filename);
         response.setContentType("text/html;charset=utf-8");
         PrintWriter out = response.getWriter();
         out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
         out.println("<HTML>");
         out.println("  <HEAD><TITLE>A Servlet</TITLE></HEAD>");
         out.println("  <BODY>");
-        out.println("http://img.ab.com:8080/img/"+filename);
+        out.println(tempContextUrl+UPLOADDIR+"/"+getDir()+filename);
         out.print("<script>alert(\"上传文件成功\")</script>");
         out.println("  </BODY>");
         out.println("</HTML>");
         out.flush();
         out.close();
     }
-    private void setDir(){
+    private String getDir(){
         Calendar now = Calendar.getInstance();
-        this.dir=this.dir+"/"+now.get(Calendar.YEAR)+(now.get(Calendar.MONTH)+1)+now.get(Calendar.DAY_OF_MONTH)+"/";
+        return Integer.toString(now.get(Calendar.YEAR))+(now.get(Calendar.MONTH)+1)+now.get(Calendar.DAY_OF_MONTH)+"/";
     }
     public void creatDir(String dir){
         File file =new File(dir);//创建文件夹
