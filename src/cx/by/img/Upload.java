@@ -4,6 +4,8 @@ package cx.by.img;
  * Created by zinc on 2016/9/30.
  */
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,6 +26,7 @@ public class Upload extends HttpServlet{
     MD5 md5=new MD5();
     ConfigLoader CL=new ConfigLoader();
     MySQL md5check=new MySQL();
+    RandomName rn=new RandomName();
     String DIR=CL.getProjectDir();
     String UPLOADDIR=CL.GetValueByKey("UPLOADDIR");
     private static final long serialVersionUID = 1L;
@@ -43,7 +46,7 @@ public class Upload extends HttpServlet{
         request.setCharacterEncoding("utf-8");
         Part part = request.getPart("filename");//获取文件名称
         String filename = getFilename(part);
-
+        filename = rn.nameCheck(filename);
         creatDir(DIR+"/"+UPLOADDIR+"/"+getDir());
         part.write(DIR+"/"+UPLOADDIR+"/"+getDir()+filename);
         String filemd5=md5.getMd5ByFile(new File(DIR+"/"+UPLOADDIR+"/"+getDir()+filename));

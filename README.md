@@ -2,7 +2,13 @@
 
 ## Describe
 
-这是使用jsp和servlet编写的图床程序，目前0.0.1Beta版本只实现了基本功能，等待完善。
+这是使用jsp和servlet编写的图床程序，目前Beta版本只实现了基本功能，等待完善。
+
+### NEEDS
+
+- commons-configuration2
+- commons-codec
+- commons-lang3
 
 ## Change log
 
