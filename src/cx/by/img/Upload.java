@@ -15,11 +15,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+
+import static java.lang.System.out;
+
 @MultipartConfig(location = "/usr/local/apache-tomcat-8.5.5/img/img/", maxFileSize = 1024 * 1024 * 10)
 
 public class Upload extends HttpServlet{
-    private static final String DIR="/usr/local/apache-tomcat-8.5.5/img/";
-    private static final String UPLOADDIR="img";
+    MD5 md5=new MD5();
+    ConfigLoader CL=new ConfigLoader();
+    MySQL md5check=new MySQL();
+    String DIR=CL.getProjectDir();
+    String UPLOADDIR=CL.GetValueByKey("UPLOADDIR");
     private static final long serialVersionUID = 1L;
 
     public Upload() {
@@ -35,23 +41,34 @@ public class Upload extends HttpServlet{
         StringBuffer url = request.getRequestURL();
         String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
         request.setCharacterEncoding("utf-8");
-        Part part = request.getPart("filename");
-        //获取文件名称
+        Part part = request.getPart("filename");//获取文件名称
         String filename = getFilename(part);
+
         creatDir(DIR+"/"+UPLOADDIR+"/"+getDir());
         part.write(DIR+"/"+UPLOADDIR+"/"+getDir()+filename);
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
-        out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
-        out.println("<HTML>");
-        out.println("  <HEAD><TITLE>A Servlet</TITLE></HEAD>");
-        out.println("  <BODY>");
-        out.println(tempContextUrl+UPLOADDIR+"/"+getDir()+filename);
-        out.print("<script>alert(\"上传文件成功\")</script>");
-        out.println("  </BODY>");
-        out.println("</HTML>");
-        out.flush();
-        out.close();
+        String filemd5=md5.getMd5ByFile(new File(DIR+"/"+UPLOADDIR+"/"+getDir()+filename));
+        if(md5check.md5Check(filemd5)){
+            md5check.insertInfo(request.getRemoteAddr(),filename,filemd5);
+            response.setContentType("text/html;charset=utf-8");
+            PrintWriter out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("  <HEAD><TITLE>A Servlet</TITLE></HEAD>");
+            out.println("  <BODY>");
+            out.println(tempContextUrl+UPLOADDIR+"/"+getDir()+filename);
+            out.println(filemd5);
+            out.print("<script>alert(\"上传文件成功\")</script>");
+            out.println("  </BODY>");
+            out.println("</HTML>");
+            out.flush();
+            out.close();
+        }else{
+            PrintWriter out = response.getWriter();
+            out.println(md5check.md5Check(filemd5));
+            out.flush();
+            out.close();
+
+        }
     }
     private String getDir(){
         Calendar now = Calendar.getInstance();
