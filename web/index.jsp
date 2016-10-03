@@ -17,18 +17,16 @@
 <head>
   <base href="<%=basePath%>">
   <title>上传文件</title>
-  <meta http-equiv="pragma" content="no-cache">
-  <meta http-equiv="cache-control" content="no-cache">
-  <meta http-equiv="expires" content="0">
-  <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-  <meta http-equiv="description" content="This is my page">
   <script type="text/javascript" src="check.js"></script>
+  <script type="text/javascript" src="js/send.js"></script>
 </head>
 <body>
 <form action="<%=request.getContextPath()%>/Upload"
       method="post" enctype="multipart/form-data">
   选择文件：<input type="file" accept="image/*" id="file" name="filename" onchange="fileChange(this)"/> <input type="submit"
-                                                    name="file_submit" value="提交" >
+                                                    name="file_submit" value="提交" onclick="send()">
 </form>
+<% if(request.getAttribute("url")!=null)
+    out.println(basePath+request.getAttribute("url"));%>
 </body>
 </html>

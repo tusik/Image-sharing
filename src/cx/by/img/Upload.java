@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -42,7 +43,6 @@ public class Upload extends HttpServlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         StringBuffer url = request.getRequestURL();
-        String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
         request.setCharacterEncoding("utf-8");
         Part part = request.getPart("filename");//获取文件名称
         String filename = getFilename(part);
@@ -52,25 +52,14 @@ public class Upload extends HttpServlet{
         String filemd5=md5.getMd5ByFile(new File(DIR+"/"+UPLOADDIR+"/"+getDir()+filename));
         if(md5check.md5Check(filemd5)){
             md5check.insertInfo(request.getRemoteAddr(),filename,filemd5);
-            response.setContentType("text/html;charset=utf-8");
-            PrintWriter out = response.getWriter();
-            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
-            out.println("<HTML>");
-            out.println("  <HEAD><TITLE>A Servlet</TITLE></HEAD>");
-            out.println("  <BODY>");
-            out.println(tempContextUrl+UPLOADDIR+"/"+getDir()+filename);
-            out.println(filemd5);
-            out.print("<script>alert(\"上传文件成功\")</script>");
-            out.println("  </BODY>");
-            out.println("</HTML>");
-            out.flush();
-            out.close();
+            request.setAttribute("url", UPLOADDIR+"/"+getDir()+filename);
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
         }else{
             PrintWriter out = response.getWriter();
             out.println(md5check.md5Check(filemd5));
             out.flush();
             out.close();
-
+            deleteFile(DIR+"/"+UPLOADDIR+"/"+getDir()+filename);
         }
     }
     private String getDir(){
@@ -121,6 +110,14 @@ public class Upload extends HttpServlet{
                 return str.substring(start + open.length(), end);
         }
         return null;
+    }
+
+    public void deleteFile(String sPath) {
+        File file= new File(sPath);
+        // 路径为文件且不为空则进行删除
+        if (file.isFile() && file.exists()) {
+            file.delete();
+        }
     }
 
     public void init() throws ServletException {
