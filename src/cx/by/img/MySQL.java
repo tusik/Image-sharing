@@ -6,11 +6,11 @@ import java.sql.*;
  * Created by zinc on 2016/10/2.
  */
 public class MySQL {
-    static ConfigLoader CL = new ConfigLoader();
-    public static final String url = "jdbc:mysql://127.0.0.1/images";
-    public static final String name = "com.mysql.jdbc.Driver";
-    public static final String user = "root";
-    public static final String password = "123123";
+    ConfigLoader CL = new ConfigLoader();
+    public final String url = "jdbc:mysql://127.0.0.1/"+CL.GetValueByKey("DBNAME");
+    public final String name = "com.mysql.jdbc.Driver";
+    public final String user = CL.GetValueByKey("DBUSER");
+    public final String password = CL.GetValueByKey("DBPASSWD");
     public Connection conn = null;
     public PreparedStatement pst = null;
     String sql=null;

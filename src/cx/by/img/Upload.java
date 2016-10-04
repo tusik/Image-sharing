@@ -53,14 +53,15 @@ public class Upload extends HttpServlet{
 
         if(md5check.md5Check(filemd5).equals("null")){
             md5check.insertInfo(request.getRemoteAddr(),getDir()+filename,filemd5);
+            filename=getDir()+filename;
         }else{
             filename=md5check.md5Check(filemd5);
             deleteFile(DIR+UPLOADDIR+"/"+getDir()+filename);
         }
-        FileInputStream fis = new FileInputStream(new File(DIR+UPLOADDIR+"/"+getDir()+filename));
+        FileInputStream fis = new FileInputStream(new File(DIR+UPLOADDIR+"/"+filename));
         BufferedImage bufferedImg = ImageIO.read(fis);
         HttpSession session=request.getSession();
-        session.setAttribute("url",UPLOADDIR+"/"+getDir()+filename);
+        session.setAttribute("url",UPLOADDIR+"/"+filename);
         session.setAttribute("imgWidth",bufferedImg.getWidth());
         session.setAttribute("imgHeight",bufferedImg.getHeight());
         //response.getWriter().println(DIR+UPLOADDIR+"/"+getDir()+filename);
