@@ -12,7 +12,7 @@
 
 ## Install
 
-- 修改WEB-INF下的配置文件,和修改src下Upload.java和ConfigLoader.java並重新編譯
+- 修改WEB-INF下的配置文件,和修改src下Upload.java、MySql.java和ConfigLoader.java並重新編譯
 - 創建數據庫images,創建表
 CREATE TABLE `files`( `id` int(11) NOT NULL AUTO_INCREMENT, `filename` char(21) NOT NULL, `ip` char(15) NOT NULL, `md5` char(32) NOT NULL, `date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(`id`));
 ## Change log

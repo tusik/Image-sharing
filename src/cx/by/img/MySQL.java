@@ -7,10 +7,10 @@ import java.sql.*;
  */
 public class MySQL {
     static ConfigLoader CL = new ConfigLoader();
-    public static final String url = "jdbc:mysql://127.0.0.1/"+CL.GetValueByKey("DBNAME");
+    public static final String url = "jdbc:mysql://127.0.0.1/images";
     public static final String name = "com.mysql.jdbc.Driver";
-    public static final String user = CL.GetValueByKey("DBUSER");
-    public static final String password = CL.GetValueByKey("DBPASSWD");
+    public static final String user = "root";
+    public static final String password = "123123";
     public Connection conn = null;
     public PreparedStatement pst = null;
     String sql=null;
