@@ -6,11 +6,11 @@ import java.sql.*;
  * Created by zinc on 2016/10/2.
  */
 public class MySQL {
-
-    public static final String url = "jdbc:mysql://127.0.0.1/images";
+    static ConfigLoader CL = new ConfigLoader();
+    public static final String url = "jdbc:mysql://127.0.0.1/"+CL.GetValueByKey("DBNAME");
     public static final String name = "com.mysql.jdbc.Driver";
-    public static final String user = "root";
-    public static final String password = "123123";
+    public static final String user = CL.GetValueByKey("DBUSER");
+    public static final String password = CL.GetValueByKey("DBPASSWD");
     public Connection conn = null;
     public PreparedStatement pst = null;
     String sql=null;
@@ -48,25 +48,23 @@ public class MySQL {
         }
     }
 
-    public boolean md5Check(String md5){
+    public String md5Check(String md5){
         ResultSet rs=null;
-        sql="SELECT id FROM files where md5='"+md5+"'";
+        sql="SELECT filename FROM files where md5='"+md5+"'";
         MySQL db=new MySQL();
         db.MySql(sql);
         try {
             rs=db.pst.executeQuery();
             if (rs.next()){
-                db.close();
-                rs.close();
-                return false;
+                String s=rs.getString("filename");
+                return s;
             }else {
-                db.close();
-                rs.close();
-                return true;
+                return "null";
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return e.toString();
         }
-        return false;
+
     }
 }

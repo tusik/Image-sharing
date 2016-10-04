@@ -6,18 +6,18 @@ package cx.by.img;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Enumeration;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import javax.servlet.http.*;
 
 import static java.lang.System.out;
 
@@ -47,20 +47,25 @@ public class Upload extends HttpServlet{
         Part part = request.getPart("filename");//获取文件名称
         String filename = getFilename(part);
         filename = rn.nameCheck(filename);
-        creatDir(DIR+"/"+UPLOADDIR+"/"+getDir());
-        part.write(DIR+"/"+UPLOADDIR+"/"+getDir()+filename);
-        String filemd5=md5.getMd5ByFile(new File(DIR+"/"+UPLOADDIR+"/"+getDir()+filename));
-        if(md5check.md5Check(filemd5)){
-            md5check.insertInfo(request.getRemoteAddr(),filename,filemd5);
-            request.setAttribute("url", UPLOADDIR+"/"+getDir()+filename);
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        creatDir(DIR+UPLOADDIR+"/"+getDir());
+        part.write(DIR+UPLOADDIR+"/"+getDir()+filename);
+        String filemd5=md5.getMd5ByFile(new File(DIR+UPLOADDIR+"/"+getDir()+filename));
+
+        if(md5check.md5Check(filemd5).equals("null")){
+            md5check.insertInfo(request.getRemoteAddr(),getDir()+filename,filemd5);
         }else{
-            PrintWriter out = response.getWriter();
-            out.println(md5check.md5Check(filemd5));
-            out.flush();
-            out.close();
-            deleteFile(DIR+"/"+UPLOADDIR+"/"+getDir()+filename);
+            filename=md5check.md5Check(filemd5);
+            deleteFile(DIR+UPLOADDIR+"/"+getDir()+filename);
         }
+        FileInputStream fis = new FileInputStream(new File(DIR+UPLOADDIR+"/"+getDir()+filename));
+        BufferedImage bufferedImg = ImageIO.read(fis);
+        HttpSession session=request.getSession();
+        session.setAttribute("url",UPLOADDIR+"/"+getDir()+filename);
+        session.setAttribute("imgWidth",bufferedImg.getWidth());
+        session.setAttribute("imgHeight",bufferedImg.getHeight());
+        //response.getWriter().println(DIR+UPLOADDIR+"/"+getDir()+filename);
+        //response.getWriter().println(bufferedImg.getWidth());
+        response.sendRedirect("/");
     }
     private String getDir(){
         Calendar now = Calendar.getInstance();

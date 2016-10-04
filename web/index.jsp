@@ -15,18 +15,38 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <base href="<%=basePath%>">
-  <title>上传文件</title>
-  <script type="text/javascript" src="check.js"></script>
-  <script type="text/javascript" src="js/send.js"></script>
+    <base href="<%=basePath%>">
+    <title>上传文件</title>
+    <script type="text/javascript" src="check.js"></script>
+    <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+
 </head>
 <body>
-<form action="<%=request.getContextPath()%>/Upload"
-      method="post" enctype="multipart/form-data">
-  选择文件：<input type="file" accept="image/*" id="file" name="filename" onchange="fileChange(this)"/> <input type="submit"
-                                                    name="file_submit" value="提交" onclick="send()">
-</form>
-<% if(request.getAttribute("url")!=null)
-    out.println(basePath+request.getAttribute("url"));%>
+<div class="container">
+  <form action="<%=request.getContextPath()%>/Upload"
+        method="post" enctype="multipart/form-data">
+        <input type="file" accept="image/*" id="file" name="filename" class="itxt " onchange="fileChange(this)"/>
+        <input type="submit" name="file_submit" class="btn btn-default isubmit" value="提交" onclick="send()">
+    <%
+    if(session.getAttribute("url")!=null){
+        out.print("<p><a href='"+session.getAttribute("url")+"'>"+basePath+session.getAttribute("url")+"</a></p>");
+    }
+  %>
+  </form>
+</div>
+<div class="main">
+    <%
+        int imgWidth=0;
+        if(session.getAttribute("url")!=null)
+            imgWidth=Integer.parseInt(session.getAttribute("imgWidth").toString());
+            if(imgWidth>1080){
+                imgWidth=1080;
+            }
+            out.print("<img src='"+session.getAttribute("url")+"' width=\""+imgWidth+"px\" height=\"auto\">");
+        session.setAttribute("url",null);
+    %>
+</div>
+
 </body>
 </html>

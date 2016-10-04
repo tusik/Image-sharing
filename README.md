@@ -10,8 +10,17 @@
 - commons-codec
 - commons-lang3
 
+## Install
+
+- 修改WEB-INF下的配置文件,和修改src下Upload.java和ConfigLoader.java並重新編譯
+- 創建數據庫images,創建表
+CREATE TABLE `files`( `id` int(11) NOT NULL AUTO_INCREMENT, `filename` char(21) NOT NULL, `ip` char(15) NOT NULL, `md5` char(32) NOT NULL, `date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(`id`));
 ## Change log
 
+### v0.0.8(16.10.2)
+
+- 增加對上傳的重複文件處理
+- 增加配置文件
 ### v0.0.5(16.10.2)
 
 - 增加对上传文件的md5检测，判断是否为重复文件

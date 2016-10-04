@@ -13,7 +13,9 @@ import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 
 public class MD5 {
+
     public MD5(){super();}
+
     public static String getMd5ByFile(File file) throws FileNotFoundException {
         String value = null;
         FileInputStream in = new FileInputStream(file);
@@ -36,7 +38,7 @@ public class MD5 {
         }
         return value;
     }
-
+/**
     public static void main(String[] args) throws IOException {
 
         String path="F:\\SWT.zip";
@@ -45,5 +47,5 @@ public class MD5 {
         System.out.println("MD5:"+v.toUpperCase());
 
         //System.out.println("MD5:"+DigestUtils.md5Hex("WANGQIUYUN"));
-    }
+    }*/
 }
