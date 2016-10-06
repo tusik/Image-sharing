@@ -19,6 +19,9 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.*;
 
+import org.json.JSONObject;
+import org.json.JSONArray;
+
 import static java.lang.System.out;
 
 @MultipartConfig(location = "/usr/local/apache-tomcat-8.5.5/img/img/", maxFileSize = 1024 * 1024 * 10)
@@ -44,7 +47,7 @@ public class Upload extends HttpServlet{
             throws ServletException, IOException {
         StringBuffer url = request.getRequestURL();
         request.setCharacterEncoding("utf-8");
-        Part part = request.getPart("filename");//获取文件名称
+        Part part = request.getPart("myFile");//获取文件名称
         String filename = getFilename(part);
         filename = rn.nameCheck(filename);
         creatDir(DIR+UPLOADDIR+"/"+getDir());
@@ -56,17 +59,24 @@ public class Upload extends HttpServlet{
             filename=getDir()+filename;
         }else{
             filename=md5check.md5Check(filemd5);
-            deleteFile(DIR+UPLOADDIR+"/"+getDir()+filename);
+            //deleteFile(DIR+UPLOADDIR+"/"+getDir()+filename);
         }
         FileInputStream fis = new FileInputStream(new File(DIR+UPLOADDIR+"/"+filename));
         BufferedImage bufferedImg = ImageIO.read(fis);
-        HttpSession session=request.getSession();
-        session.setAttribute("url",UPLOADDIR+"/"+filename);
-        session.setAttribute("imgWidth",bufferedImg.getWidth());
-        session.setAttribute("imgHeight",bufferedImg.getHeight());
+        //HttpSession session=request.getSession();
+        //session.setAttribute("url",UPLOADDIR+"/"+filename);
+        //session.setAttribute("size",request.getContentLength());
+        //session.setAttribute("imgWidth",bufferedImg.getWidth());
+        //session.setAttribute("imgHeight",bufferedImg.getHeight());
+        JSONObject JO1 = new JSONObject();
+        JO1.put("url",UPLOADDIR+"/"+filename);
+        JO1.put("size",request.getContentLength());
+        JO1.put("imgWidth",bufferedImg.getWidth());
+        JO1.put("imgHeight",bufferedImg.getHeight());
+        response.getWriter().write(String.valueOf(JO1));
         //response.getWriter().println(DIR+UPLOADDIR+"/"+getDir()+filename);
         //response.getWriter().println(bufferedImg.getWidth());
-        response.sendRedirect("/");
+        //response.sendRedirect("/");
     }
     private String getDir(){
         Calendar now = Calendar.getInstance();

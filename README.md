@@ -2,7 +2,7 @@
 
 ## Describe
 
-这是使用jsp和servlet编写的图床程序，目前Beta版本只实现了基本功能，等待完善。
+这是使用jsp和servlet编写的图床程序，目前0.1.0版本基本完成功能，并使用AJAX提交，基本满足正常使用需求。
 
 ### NEEDS
 
@@ -16,6 +16,10 @@
 - 創建數據庫images,創建表
 CREATE TABLE `files`( `id` int(11) NOT NULL AUTO_INCREMENT, `filename` char(21) NOT NULL, `ip` char(15) NOT NULL, `md5` char(32) NOT NULL, `date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(`id`));
 ## Change log
+
+### v0.1.0(16.10.2)
+
+- 修改为AJAX提交
 
 ### v0.0.8(16.10.2)
 
