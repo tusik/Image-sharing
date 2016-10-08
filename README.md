@@ -17,7 +17,7 @@ CREATE TABLE `files`( `id` int(11) NOT NULL AUTO_INCREMENT, `filename` char(21) 
 
 ## Change log
 
-### v0.1.0(16.10.2)
+### v0.1.1(16.10.6)
 
 - 修改JSON传输方式
 
