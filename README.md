@@ -6,8 +6,7 @@
 
 ### NEEDS
 
-- commons-configuration2
-- commons-codec
+- mysql-connector-java
 - commons-lang3
 
 ## Install
