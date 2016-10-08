@@ -28,7 +28,7 @@ public class RandomName {
                 check.MySql(sql);
                 rs = check.pst.executeQuery();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return filename;

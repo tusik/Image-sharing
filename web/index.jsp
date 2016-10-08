@@ -73,6 +73,7 @@
             //3.3 上传完毕时，隐藏进度条
             xhr.onloadend=function(){
                 document.getElementById("progress").style.display="none";
+                //alert(xhr.responseText);
                 var path=window.location.protocol+"//";
                 if(window.location.port!=null)path+=":"+window.location.port+"/";
                 path+=window.location.hostname+"/";

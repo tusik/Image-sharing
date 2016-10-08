@@ -8,7 +8,13 @@ import java.util.Properties;
 
 public class ConfigLoader {
 
-    String DIR="/usr/local/apache-tomcat-8.5.5/img/";
+    String DIR="/home/wwwroot/img/ROOT";
+
+    public static void main(String[] args)  {
+        ConfigLoader CL=new ConfigLoader();
+        System.out.println(CL.GetValueByKey("UPLOADDIR"));
+    }
+
     public String getProjectDir(){
         return this.DIR;
     }
@@ -26,9 +32,6 @@ public class ConfigLoader {
                 return null;
           }
     }
-    /**Debug
-    public static void main( String[] args)  {
-       ConfigLoader CL=new ConfigLoader();
-        System.out.println(CL.GetValueByKey("UPLOADDIR"));
-    }*/
+
+
 }

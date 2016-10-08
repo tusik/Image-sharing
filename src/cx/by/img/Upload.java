@@ -19,12 +19,10 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.*;
 
-import org.json.JSONObject;
-import org.json.JSONArray;
 
 import static java.lang.System.out;
 
-@MultipartConfig(location = "/usr/local/apache-tomcat-8.5.5/img/img/", maxFileSize = 1024 * 1024 * 10)
+@MultipartConfig(location = "/home/wwwroot/img/ROOT/upload/", maxFileSize = 1024 * 1024 * 5)
 
 public class Upload extends HttpServlet{
     MD5 md5=new MD5();
@@ -55,11 +53,11 @@ public class Upload extends HttpServlet{
         String filemd5=md5.getMd5ByFile(new File(DIR+UPLOADDIR+"/"+getDir()+filename));
 
         if(md5check.md5Check(filemd5).equals("null")){
-            md5check.insertInfo(request.getRemoteAddr(),getDir()+filename,filemd5);
+            md5check.insertInfo(remoteAddr(request),getDir()+filename,filemd5);
             filename=getDir()+filename;
         }else{
             filename=md5check.md5Check(filemd5);
-            //deleteFile(DIR+UPLOADDIR+"/"+getDir()+filename);
+            deleteFile(DIR+UPLOADDIR+"/"+getDir()+filename);
         }
         FileInputStream fis = new FileInputStream(new File(DIR+UPLOADDIR+"/"+filename));
         BufferedImage bufferedImg = ImageIO.read(fis);
@@ -68,12 +66,9 @@ public class Upload extends HttpServlet{
         //session.setAttribute("size",request.getContentLength());
         //session.setAttribute("imgWidth",bufferedImg.getWidth());
         //session.setAttribute("imgHeight",bufferedImg.getHeight());
-        JSONObject JO1 = new JSONObject();
-        JO1.put("url",UPLOADDIR+"/"+filename);
-        JO1.put("size",request.getContentLength());
-        JO1.put("imgWidth",bufferedImg.getWidth());
-        JO1.put("imgHeight",bufferedImg.getHeight());
-        response.getWriter().write(String.valueOf(JO1));
+        String jsondata="{\"url\":\""+UPLOADDIR+"/"+filename+"\",\"size\":"+request.getContentLength()+
+                ",\"imgWidth\":"+bufferedImg.getWidth()+"}";
+        response.getWriter().write(jsondata);
         //response.getWriter().println(DIR+UPLOADDIR+"/"+getDir()+filename);
         //response.getWriter().println(bufferedImg.getWidth());
         //response.sendRedirect("/");
@@ -134,6 +129,19 @@ public class Upload extends HttpServlet{
         if (file.isFile() && file.exists()) {
             file.delete();
         }
+    }
+
+    public String remoteAddr(HttpServletRequest request) {
+        String remoteAddr = request.getRemoteAddr(); //先获取ip
+        String x;
+        if ((x = request.getHeader("X-FORWARDED-FOR")) != null) {//加入存在这个头，可以判断是有进过代理的
+            remoteAddr = x;
+            int idx = remoteAddr.indexOf(','); //获取第一个,的下标
+            if (idx > -1) {
+                remoteAddr = remoteAddr.substring(0, idx);//拿到第一个IP地址就是真实的IP地址
+            }
+        }
+        return remoteAddr;
     }
 
     public void init() throws ServletException {

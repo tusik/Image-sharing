@@ -7,7 +7,7 @@ import java.sql.*;
  */
 public class MySQL {
     ConfigLoader CL = new ConfigLoader();
-    public final String url = "jdbc:mysql://127.0.0.1/"+CL.GetValueByKey("DBNAME");
+    public final String url = "jdbc:mysql://localhost/"+CL.GetValueByKey("DBNAME");
     public final String name = "com.mysql.jdbc.Driver";
     public final String user = CL.GetValueByKey("DBUSER");
     public final String password = CL.GetValueByKey("DBPASSWD");
@@ -65,6 +65,5 @@ public class MySQL {
             e.printStackTrace();
             return e.toString();
         }
-
     }
 }
