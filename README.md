@@ -19,6 +19,10 @@ CREATE TABLE `files`( `id` int(11) NOT NULL AUTO_INCREMENT, `filename` char(21) 
 
 ### v0.1.0(16.10.2)
 
+- 修改JSON传输方式
+
+### v0.1.0(16.10.2)
+
 - 修改为AJAX提交
 
 ### v0.0.8(16.10.2)
