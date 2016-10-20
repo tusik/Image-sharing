@@ -1,5 +1,5 @@
 # 图床程序-jsp&servlet
-![license](https://img.shields.io/aur/license/yaourt.svg)  ![release](https://img.shields.io/badge/release-v0.1.1-brightgreen.svg)
+![license](https://img.shields.io/aur/license/yaourt.svg)  ![release](https://img.shields.io/badge/release-v0.1.2-brightgreen.svg)
 
 ## Describe
 
