@@ -7,8 +7,8 @@ import java.io.*;
 import java.util.Properties;
 
 public class ConfigLoader {
-
-    String DIR="/home/wwwroot/img/ROOT";
+    //绝对路径WEB-INF所在目录，“/”结尾
+    String DIR="/home/wwwroot/img/ROOT/";
 
     public static void main(String[] args)  {
         ConfigLoader CL=new ConfigLoader();

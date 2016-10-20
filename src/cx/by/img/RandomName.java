@@ -14,15 +14,16 @@ public class RandomName {
         String filename= RandomStringUtils.randomAlphanumeric(6).toString()+"."+fileformat;
         return filename;
     }
+    //文件名检测是否存在
     public String nameCheck(String filename){
         String fn[] = filename.split("\\.");
         String fileformat = fn[fn.length-1];
         filename=random(fileformat);
-        String sql="SELECT id FROM files where='"+filename+"'";
+        String sql="SELECT id FROM files where='"+filename+"'";//从数据库查询是否重复
         check.MySql(sql);
         try {
             ResultSet rs=check.pst.executeQuery();
-            while(rs.next()) {
+            while(rs.next()) {//文件名在数据库中出现则重新生成
                 filename = random(fileformat);
                 sql = "SELECT id FROM files where='" + filename + "'";
                 check.MySql(sql);
@@ -30,6 +31,9 @@ public class RandomName {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            //关闭数据库链接
+            check.close();
         }
         return filename;
     }

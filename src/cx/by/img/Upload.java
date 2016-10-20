@@ -31,6 +31,7 @@ public class Upload extends HttpServlet{
     RandomName rn=new RandomName();
     String DIR=CL.getProjectDir();
     String UPLOADDIR=CL.GetValueByKey("UPLOADDIR");
+    Ftp sftp = new Ftp();
     private static final long serialVersionUID = 1L;
 
     public Upload() {
@@ -44,21 +45,23 @@ public class Upload extends HttpServlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         StringBuffer url = request.getRequestURL();
-        request.setCharacterEncoding("utf-8");
+        request.setCharacterEncoding("utf-8");//设定请求编码
         Part part = request.getPart("myFile");//获取文件名称
-        String filename = getFilename(part);
-        filename = rn.nameCheck(filename);
-        creatDir(DIR+UPLOADDIR+"/"+getDir());
-        part.write(DIR+UPLOADDIR+"/"+getDir()+filename);
-        String filemd5=md5.getMd5ByFile(new File(DIR+UPLOADDIR+"/"+getDir()+filename));
-
-        if(md5check.md5Check(filemd5).equals("null")){
+        String filename = getFilename(part);//获取文件名
+        filename = rn.nameCheck(filename);//重命名文件
+        creatDir(DIR+UPLOADDIR+"/"+getDir());//创建目录
+        part.write(DIR+UPLOADDIR+"/"+getDir()+"/"+filename);//写入图片
+        String filemd5=md5.getMd5ByFile(new File(DIR+UPLOADDIR+"/"+getDir()+filename));//获取文件md5
+        //判断文件是否重复
+        if(md5check.md5Check(filemd5)==null){
             md5check.insertInfo(remoteAddr(request),getDir()+filename,filemd5);
             filename=getDir()+filename;
         }else{
+            //文件重复删除文件
             filename=md5check.md5Check(filemd5);
             deleteFile(DIR+UPLOADDIR+"/"+getDir()+filename);
         }
+        //文件流读取文件
         FileInputStream fis = new FileInputStream(new File(DIR+UPLOADDIR+"/"+filename));
         BufferedImage bufferedImg = ImageIO.read(fis);
         //HttpSession session=request.getSession();
@@ -66,6 +69,14 @@ public class Upload extends HttpServlet{
         //session.setAttribute("size",request.getContentLength());
         //session.setAttribute("imgWidth",bufferedImg.getWidth());
         //session.setAttribute("imgHeight",bufferedImg.getHeight());
+        /**
+        try {
+            sftp.sshSftp("ca1.nook.one","root","dwhdssb.",22,
+                    DIR+UPLOADDIR+"/"+getDir()+filename,DIR+UPLOADDIR+"/"+getDir()+filename);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        //数据回写
         String jsondata="{\"url\":\""+UPLOADDIR+"/"+filename+"\",\"size\":"+request.getContentLength()+
                 ",\"imgWidth\":"+bufferedImg.getWidth()+"}";
         response.getWriter().write(jsondata);
@@ -73,10 +84,12 @@ public class Upload extends HttpServlet{
         //response.getWriter().println(bufferedImg.getWidth());
         //response.sendRedirect("/");
     }
+    //生成目录
     private String getDir(){
         Calendar now = Calendar.getInstance();
         return Integer.toString(now.get(Calendar.YEAR))+(now.get(Calendar.MONTH)+1)+now.get(Calendar.DAY_OF_MONTH)+"/";
     }
+    //创建目录
     public void creatDir(String dir){
         File file =new File(dir);//创建文件夹
         if  (!file .exists()  && !file .isDirectory())
@@ -84,10 +97,7 @@ public class Upload extends HttpServlet{
             file .mkdir();
         } else {}
     }
-    private String getRandomString(){
-        return "sa";
-    }
-
+    //获取文件名
     private String getFilename(Part part) {
         if (part == null) {
             return null;
@@ -130,15 +140,15 @@ public class Upload extends HttpServlet{
             file.delete();
         }
     }
-
+    //获取客户真实IP
     public String remoteAddr(HttpServletRequest request) {
-        String remoteAddr = request.getRemoteAddr(); //先获取ip
+        String remoteAddr = request.getRemoteAddr(); //获取ip
         String x;
         if ((x = request.getHeader("X-FORWARDED-FOR")) != null) {//加入存在这个头，可以判断是有进过代理的
             remoteAddr = x;
             int idx = remoteAddr.indexOf(','); //获取第一个,的下标
             if (idx > -1) {
-                remoteAddr = remoteAddr.substring(0, idx);//拿到第一个IP地址就是真实的IP地址
+                remoteAddr = remoteAddr.substring(0, idx);//拿到真实的IP地址
             }
         }
         return remoteAddr;

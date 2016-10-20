@@ -19,8 +19,6 @@
     <title>上传文件</title>
     <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/index.css" rel="stylesheet">
-
-
 </head>
 <body>
 <div class="container">
@@ -48,7 +46,7 @@
         }
         var name=this.value;
         var fileName = name.substring(name.lastIndexOf(".")+1).toLowerCase();
-        if(fileName !="jpge" && fileName !="jpg"&& fileName !="png"&& fileName !="bmp"&& fileName !="ico"&& fileName !="gif"&& fileName !="jpeg"){
+        if(fileName !="jpg"&& fileName !="png"&& fileName !="bmp"&& fileName !="ico"&& fileName !="gif"&& fileName !="jpeg"){
             alert("请选择图片文件上传！");
             this.value="";
             return

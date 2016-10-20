@@ -17,6 +17,7 @@ public class MySQL {
 
     public MySQL(){super();}
 
+    //数据库写入
     public void insertInfo(String ip,String filename,String md5){
         ResultSet rs=null;
         sql="INSERT INTO `files` (ip,filename,md5) VALUES('"+ip+"','"+filename+"','"+md5+"')";
@@ -26,6 +27,8 @@ public class MySQL {
             db.pst.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            db.close();
         }
     }
 
@@ -59,11 +62,13 @@ public class MySQL {
                 String s=rs.getString("filename");
                 return s;
             }else {
-                return "null";
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
             return e.toString();
+        }finally {
+            db.close();
         }
     }
 }
