@@ -37,6 +37,7 @@ CREATE TABLE `files`( `id` int(11) NOT NULL AUTO_INCREMENT, `filename` char(21) 
 
 - 增加對上傳的重複文件處理
 - 增加配置文件
+
 ### v0.0.5(16.10.2)
 
 - 增加对上传文件的md5检测，判断是否为重复文件
