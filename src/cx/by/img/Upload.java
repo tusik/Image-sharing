@@ -20,9 +20,10 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.*;
 
 
+import static java.lang.System.err;
 import static java.lang.System.out;
-
-@MultipartConfig(location = "/home/wwwroot/img/ROOT/upload/", maxFileSize = 1024 * 1024 * 5)
+//允许程序操作的目录“/”结尾
+@MultipartConfig(location = "/usr/local/apache-tomcat-8.5.5/img/upload/", maxFileSize = 1024 * 1024 * 5)
 
 public class Upload extends HttpServlet{
     MD5 md5=new MD5();
@@ -53,13 +54,13 @@ public class Upload extends HttpServlet{
         part.write(DIR+UPLOADDIR+"/"+getDir()+"/"+filename);//写入图片
         String filemd5=md5.getMd5ByFile(new File(DIR+UPLOADDIR+"/"+getDir()+filename));//获取文件md5
         //判断文件是否重复
-        if(md5check.md5Check(filemd5)==null){
+        if(md5check.md5Check(filemd5).equals("null")){
             md5check.insertInfo(remoteAddr(request),getDir()+filename,filemd5);
             filename=getDir()+filename;
         }else{
             //文件重复删除文件
             filename=md5check.md5Check(filemd5);
-            deleteFile(DIR+UPLOADDIR+"/"+getDir()+filename);
+            //deleteFile(DIR+UPLOADDIR+"/"+getDir()+filename);
         }
         //文件流读取文件
         FileInputStream fis = new FileInputStream(new File(DIR+UPLOADDIR+"/"+filename));
@@ -69,13 +70,6 @@ public class Upload extends HttpServlet{
         //session.setAttribute("size",request.getContentLength());
         //session.setAttribute("imgWidth",bufferedImg.getWidth());
         //session.setAttribute("imgHeight",bufferedImg.getHeight());
-        /**
-        try {
-            sftp.sshSftp("ca1.nook.one","root","dwhdssb.",22,
-                    DIR+UPLOADDIR+"/"+getDir()+filename,DIR+UPLOADDIR+"/"+getDir()+filename);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
         //数据回写
         String jsondata="{\"url\":\""+UPLOADDIR+"/"+filename+"\",\"size\":"+request.getContentLength()+
                 ",\"imgWidth\":"+bufferedImg.getWidth()+"}";

@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class ConfigLoader {
     //绝对路径WEB-INF所在目录，“/”结尾
-    String DIR="/home/wwwroot/img/ROOT/";
+    String DIR="/usr/local/apache-tomcat-8.5.5/img/";
 
     public static void main(String[] args)  {
         ConfigLoader CL=new ConfigLoader();
